@@ -124,4 +124,4 @@ At this time, EntityDB isn't optimised in any level, so it's performance is a li
 - Simple Query: ~4000 Query / sec
 - Composite Query: ~ 400 Query / sec
 
-
+This values are measured in a single thread on an Intel i7 2.4 GHz processor.

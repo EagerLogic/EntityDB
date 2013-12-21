@@ -105,5 +105,13 @@ You can remove elements by id using the DB.remove(long) method.
     // removing john
 	db.remove(johnId);
 	
+## Transactions
+EntityDB does not implement any transaction logic. You need to implement your own with simple Java thread synchronization techniques.
+But the DB is thread-safe, which means lots of read operations  can run at the same time from different threads, but only one write is allowed. When a write is running, no read is allowed. This is done using Java's ReentrantReadWriteLock.
+
+## Closing the database
+You don't need to close DB instances, but you need to close the EntityDB instance when your application is closing, or when you don't need it anymore.
+
+	edb.close();
 
 

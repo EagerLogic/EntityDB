@@ -72,7 +72,7 @@ There are 4 kind of simple filter. LongFilterItem, BooleanFilterItem, StringFilt
 
 After you created your filteritem you must put it in a Filter object. The Filter object can be passed to the DB.query(Filter) method.
 
-    // create the username FilterItem
+	// create the username FilterItem
 	StringFilterItem usernameFilter = new StringFilterItem("username", StringFilterItem.EOperator.EQUALS, "john");
 	// creating the filter and applying it to the "User" kind
 	Filter filter = new Filter("User", usernameFilter);
@@ -81,10 +81,13 @@ After you created your filteritem you must put it in a Filter object. The Filter
 	// reading result
 	Entity john = result.get(0);
 	
+String attribute value comparsion is case insensitive.
+
+	
 ### Composite filters
 There are some situations when you want to query using more than one attribute. In this case, the FilterGroupItem class can be used to squash more than one filters like this:
 
-    // create the username FilterItem
+	// create the username FilterItem
 	StringFilterItem usernameFilter = new StringFilterItem("username", StringFilterItem.EOperator.EQUALS, "john");
 	// create point filter
 	LongFilterItem pointFilter = new LongFilterItem("points", LongFilterItem.EOperator.SMALLER, 50);
@@ -102,7 +105,7 @@ Ofcourse you can put an another filtergroup inside a filtergroup.
 ## Remove elements
 You can remove elements by id using the DB.remove(long) method.
 
-    // removing john
+	// removing john
 	db.remove(johnId);
 	
 ## Transactions

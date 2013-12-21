@@ -117,4 +117,11 @@ You don't need to close DB instances, but you need to close the EntityDB instanc
 
 	edb.close();
 
+# Performance
+At this time, EntityDB isn't optimised in any level, so it's performance is a little bit poor, but lot's of speed improvement will be done by next releases.
+
+- Writing: ~400 Entity / sec
+- Simple Query: ~4000 Query / sec
+- Composite Query: ~ 400 Query / sec
+
 

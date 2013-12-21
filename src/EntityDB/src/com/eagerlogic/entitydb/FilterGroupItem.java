@@ -17,7 +17,7 @@ public final class FilterGroupItem extends AFilterItem {
 	private final EOperator operator;
 	private final List<AFilterItem> filters;
 
-	public FilterGroupItem(EOperator operator, AFilterItem filter1, AFilterItem filter2, AFilterItem[] otherFilters) {
+	public FilterGroupItem(EOperator operator, AFilterItem filter1, AFilterItem filter2, AFilterItem... otherFilters) {
 		if (operator == null) {
 			throw new NullPointerException("The operator parameter can not be null.");
 		}
@@ -29,8 +29,13 @@ public final class FilterGroupItem extends AFilterItem {
 			throw new NullPointerException("The filter2 parameter can not be null.");
 		}
 		this.filters = new LinkedList<>();
+		this.filters.add(filter1);
+		this.filters.add(filter2);
 		if (otherFilters != null) {
 			for (AFilterItem filter : otherFilters) {
+				if (filter == null) {
+					throw new NullPointerException("The filter in otherFilters can not be null.");
+				}
 				this.filters.add(filter);
 			}
 		}

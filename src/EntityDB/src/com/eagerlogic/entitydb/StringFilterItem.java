@@ -30,7 +30,7 @@ public final class StringFilterItem extends AFilterItem {
 		if (referenceValue == null) {
 			throw new NullPointerException("The referenceValue can not be null. Use NullFilterItem instead.");
 		}
-		this.referenceValue = referenceValue;
+		this.referenceValue = referenceValue.toLowerCase();
 	}
 
 	public String getAttributeName() {

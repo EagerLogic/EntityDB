@@ -20,7 +20,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 /**
- *
+ * This class represents a database connection. You need one EntityDB instance per database.
+ * 
  * @author dipacs
  */
 public final class EntityDB {
@@ -28,6 +29,15 @@ public final class EntityDB {
 	private static final byte[] FILE_HEADER = new byte[]{(byte) 0xed, (byte) 0xb0};
 	private static final long HEADER_LENGTH = FILE_HEADER.length + 8;
 
+	/**
+	 * Opens the given database, or creates a newone if the given file does not exists.
+	 * 
+	 * @param dbFile
+	 * The url of the db file.
+	 * 
+	 * @return 
+	 * The EntityDB instance which represents a database connection.
+	 */
 	public static synchronized EntityDB connect(File dbFile) {
 		return new EntityDB(dbFile);
 	}
@@ -152,6 +162,12 @@ public final class EntityDB {
 		return nextId++;
 	}
 
+	/**
+	 * Returns a new {@link DB} instance which can be used to operate with the database.
+	 * 
+	 * @return 
+	 * The new {@link DB} instance which can be used to operate with the database. 
+	 */
 	public synchronized DB getDB() {
 		if (closed) {
 			throw new IllegalStateException("This db is closed.");
@@ -303,6 +319,50 @@ public final class EntityDB {
 		}
 		return res;
 	}
+	
+	Entity querySingleton(Filter filter) {
+		List<Entity> results = query(filter);
+		if (results.size() > 1) {
+			throw new RuntimeException("More than one results are returned by the query.");
+		} 
+		
+		if (results.size() < 1) {
+			throw new RuntimeException("No results are returned by the query.");
+		}
+		
+		return results.get(0);
+	}
+	
+	Entity queryFirst(Filter filter) {
+		List<Entity> results = query(filter);
+		if (results.size() < 1) {
+			return null;
+		}
+		
+		return results.get(0);
+	}
+	
+	long querySingletonKey(Filter filter) {
+		List<Long> results = queryKeys(filter);
+		if (results.size() > 1) {
+			throw new RuntimeException("More than one results are returned by the query.");
+		} 
+		
+		if (results.size() < 1) {
+			throw new RuntimeException("No results are returned by the query.");
+		}
+		
+		return results.get(0);
+	}
+	
+	long queryFirstKey(Filter filter) {
+		List<Long> results = queryKeys(filter);
+		if (results.size() < 1) {
+			return -1;
+		}
+		
+		return results.get(0);
+	}
 
 	List<Long> queryIndex(String kind, AFilterItem filter) {
 		HashMap<Long, Object> res = new HashMap<>();
@@ -367,6 +427,12 @@ public final class EntityDB {
 		return closed;
 	}
 
+	/**
+	 * Closes the database. This method first calls EntityDB.close(false) than if it's fails it calls EntityDB.close(true).
+	 * 
+	 * @return 
+	 * True if the database is force closed, otherwise false.
+	 */
 	public synchronized boolean close() {
 		try {
 			close(false);
@@ -380,6 +446,14 @@ public final class EntityDB {
 		return true;
 	}
 
+	/**
+	 * Closes this database.
+	 * 
+	 * @param force 
+	 * Defines if this database needs to be force closed or not. If this parameter is true, than this method tries to 
+	 * close the database anyway, no exception is thrown. If this parameter is false, than this method throws a RuntimeException
+	 * if closing is failed by any reason.
+	 */
 	public synchronized void close(boolean force) {
 		if (closed) {
 			throw new IllegalStateException("This db is closed.");
